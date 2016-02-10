@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Leaflet mobile example</title>
+	<title>Beer map!</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 
 	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
 	<style>
 		body {
@@ -23,7 +24,12 @@
 	<div id="map"></div>
 
 	<script>
-		var map = L.map('map');
+		var map = L.map('map', {
+			center: [54.5, -4.5],
+			minZoom: 1,
+			maxZoom: 13,
+			zoom: 6,
+		});
 
 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
 			maxZoom: 18,
@@ -33,23 +39,14 @@
 			id: 'mapbox.streets'
 		}).addTo(map);
 
-		function onLocationFound(e) {
-			var radius = e.accuracy / 2;
+                $.getJSON("./maps.geojson", function(data) {
+                        var geojson = L.geoJson(data);
+			geojson.on('click', function(e) {
+				document.location.href = e.layer.feature.properties.url;
+			});
+                        geojson.addTo(map);
+                });
 
-			L.marker(e.latlng).addTo(map)
-				.bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-			L.circle(e.latlng, radius).addTo(map);
-		}
-
-		function onLocationError(e) {
-			alert(e.message);
-		}
-
-		map.on('locationfound', onLocationFound);
-		map.on('locationerror', onLocationError);
-
-		map.locate({setView: true, maxZoom: 16});
 	</script>
 </body>
 </html>

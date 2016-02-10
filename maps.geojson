@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bishop's Castle",
+        "url": "/bishopscastle/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.99776554107666,
+          52.49315476727573
+        ]
+      }
+    }
+  ]
+}
